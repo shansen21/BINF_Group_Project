@@ -1,0 +1,85 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Data analysis for Final Project in Bioinformatics - Sydney Hansen
+
+```{r}
+# Required libraries
+library(ggplot2)
+```
+
+
+```{r}
+# Load Data
+APOE <- read.csv("GTEx_Portal.csv")
+APOE
+```
+```{r}
+# Subset by each tissue type
+APOE_brain_cortex <- APOE[APOE$Tissue == "Brain - Cortex", ]
+APOE_brain_hypothalamus <- APOE[APOE$Tissue == "Brain - Hypothalamus", ]
+APOE_brain_basal_ganglia <- APOE[APOE$Tissue %in% c("Brain - Putamen (basal ganglia)", "Brain - Nucleus accumbens (basal ganglia)", "Brain - Caudate (basal ganglia)"), ]
+APOE_brain_frontal_cortex_BA9 <- APOE[APOE$Tissue == "Brain - Frontal Cortex (BA9)", ]
+APOE_brain_anterior_qcingualte_cortex_BA24 <- APOE[APOE$Tissue == "Brain - Anterior qcingulate cortex (BA24)", ]
+APOE_brain_hippocampus <- APOE[APOE$Tissue == "Brain - Hippocampus", ]
+APOE_lung <- APOE[APOE$Tissue == "Lung", ]
+APOE_thyroid <- APOE[APOE$Tissue == "Thyroid", ]
+APOE_brain_amygdala <- APOE[APOE$Tissue == "Brain - Amygdala", ]
+APOE_brain_spinal_cord <- APOE[APOE$Tissue == "Brain - Spinal cord (cervical c-1)", ]
+APOE_testis <- APOE[APOE$Tissue == "Testis", ]
+APOE_skin_nosun <- APOE[APOE$Tissue == "Skin - Not Sun Exposed (Suprapubic)", ]
+APOE_skin_sun <- APOE[APOE$Tissue == "Skin - Sun Exposed (Lower leg)", ]
+APOE_cells <- APOE[APOE$Tissue == "Cells - Cultured fibroblasts", ]
+APOE_nerve <- APOE[APOE$Tissue == "Nerve - Tibial", ]
+```
+
+```{r}
+# Average NES for each tissue subset
+data_list <- list(APOE_brain_amygdala, APOE_brain_anterior_qcingualte_cortex_BA24, APOE_brain_basal_ganglia, APOE_brain_cortex, APOE_brain_frontal_cortex_BA9, APOE_brain_hippocampus, APOE_brain_hypothalamus, APOE_brain_spinal_cord, APOE_cells, APOE_lung, APOE_nerve, APOE_skin_nosun, APOE_skin_sun, APOE_testis, APOE_thyroid)  
+nes_means <- numeric(length(data_list)) 
+
+for (i in seq_along(data_list)) {
+  nes_means[i] <- mean(data_list[[i]]$NES, na.rm = TRUE)
+}
+
+print(nes_means)
+```
+
+```{r}
+# Boxplot of NES scores by tissue type
+ggplot(APOE, aes(x = Tissue, y = NES, fill = Tissue)) + 
+  geom_boxplot() + 
+  labs(title = "NES of APOE Gene by Tissue Type") + 
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+```{r}
+# Separate specific tissue types to either brain tissue or other
+APOE$TissueGroup <- ifelse(grepl("Brain", APOE$Tissue), "Brain", "Other")
+```
+
+
+```{r}
+# PCA Analysis
+# Only include NES column in PCA analysis
+data_matrix <- APOE[, c("NES", "P.Value")]
+
+# Run PCA
+pca_result <- prcomp(data_matrix, scale. = TRUE)
+
+# Make a data frame to visualize PCA using ggplot2
+pca_df <- data.frame(
+  PC1 = pca_result$x[, 1],  # First Principal Component
+  PC2 = pca_result$x[, 2],  # Second Principal Component
+  TissueGroup = APOE$TissueGroup  # Tissue groups for coloring
+)
+
+# Visualize
+ggplot(pca_df, aes(x = PC1, y = PC2, color = TissueGroup)) +
+  geom_point(size = 3, alpha = 0.8) +
+  theme_minimal() +
+  labs(title = "PCA Plot: NES vs Tissue", x = "PC1", y = "PC2") +
+  theme(legend.title = element_blank())
+```
+
