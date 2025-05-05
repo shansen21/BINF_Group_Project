@@ -10,4 +10,4 @@ This data is significant expression data including the variant ID, the SNP ID, t
 
 # Scripts
 Scripts included in this repository are draft scripts for analyzing this data in R using R Studio.
-The current script includes data analysis of Box Plot and PCA analysis; however, after further inspection of the data set, a network is the better representation of APOE variant expression and will be completed next.
+The current script includes data analysis of Box Plot and PCA analysis; however, after further inspection of the data set, a heatmap is the best representation of variant tissue expression.
