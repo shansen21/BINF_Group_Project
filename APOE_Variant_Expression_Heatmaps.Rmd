@@ -1,0 +1,37 @@
+---
+title: "APOE_Variant_Expression_Heatmaps"
+author: "Sydney Hansen"
+date: "2025-05-08"
+output: html_document
+---
+This is a clean .rmd file with only the heatmap analyses of the APOE Variant Expression data from GTEx.
+Data can be found here: https://www.gtexportal.org/home/gene/APOE under the heading "Significant Single-Tissue eQTLs for APOE (ENSG00000130203.10) in all tissues"
+
+```{r}
+# Required libraries
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+# Load Data
+APOE <- read.csv("GTEx_Portal.csv")
+APOE
+```
+
+```{r}
+# Make sure Tissue is a factor sorted alphabetically
+APOE <- APOE %>%
+  mutate(Tissue = factor(Tissue, levels = sort(unique(Tissue))))
+
+# Create the heatmap of APOE Variant expression separated by tissues, and colored by NES scores
+my_plot <- ggplot(APOE, aes(Tissue, SNP.Id, fill = NES)) + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  theme(axis.text.y = element_text(size = 8, margin = margin(t = 6, b = 6))) +
+  geom_tile(height = 0.8)
+
+ggsave("heatmap.png", plot = my_plot, height = 10, width = 8, bg = "white")
+```
+
