@@ -11,3 +11,5 @@ This data is significant expression data including the variant ID, the SNP ID, t
 # Scripts
 Scripts included in this repository are draft scripts for analyzing this data in R using R Studio.
 The current script includes data analysis of Box Plot and PCA analysis; however, after further inspection of the data set, a heatmap is the best representation of variant tissue expression.
+The .rmd file labeled "BINF_Final_Project" includes all R code that was run during the process of this project, including code that did not work nor was used in the final project.
+The .rmd file labeled "APOE_Variant_Expression_Heatmaps" is a clean version of the R code that was used specifically with creating the heatmap analysis of APOE Variant Tissue Expression. The resulting heatmap was also included as a .png file to this repository. 
