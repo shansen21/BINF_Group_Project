@@ -10,7 +10,7 @@ My data was obtained from https://www.gtexportal.org/home/gene/APOE under the he
 This data is significant expression data including the variant ID, the SNP ID, the Phenotype ID(s), the Intron ID, the P-Value, NES values, and Tissue Sample. 
 
 # Scripts
-Scripts included in this repository are draft scripts for analyzing this data in R using R Studio.
+Scripts included in this repository are draft scripts for analyzing this data in R using R Studio (Version 2024.12.1+563).
 
 The current script includes data analysis of Box Plot and PCA analysis; however, after further inspection of the data set, a heatmap is the best representation of variant tissue expression.
 
